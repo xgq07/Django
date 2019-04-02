@@ -19,6 +19,8 @@ class Course(models.Model):
         verbose_name = "课程"
         verbose_name_plural = verbose_name
 
+    def __str__(self):
+        return self.name
 
 class Lesson(models.Model):
     course = models.ForeignKey(Course, verbose_name="课程")
@@ -56,5 +58,8 @@ class CourseResource(models.Model):
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
 
     class Meta:
-        verbose_name = u"课程资源"
+        verbose_name = "课程资源"
         verbose_name_plural = verbose_name
+    
+    def __str__(self):
+        return "课程资源"
