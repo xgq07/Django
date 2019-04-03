@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0,os.path.join(BASE_DIR,'apps'))
 sys.path.insert(0,os.path.join(BASE_DIR,'extra_apps'))
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticRoot')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -32,6 +32,9 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+AUTHENTICATION_BACKENDS = (
+    'users.views.CustomBackend',
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -136,4 +139,6 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
-
+STATICFILES_DIRS=[
+    os.path.join(BASE_DIR,"static")
+]
