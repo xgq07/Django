@@ -48,8 +48,10 @@ INSTALLED_APPS = [
     'operation',
     'organization',
     'xadmin',
-    'crispy_forms'
+    'crispy_forms',
+    'captcha'
 ]
+
 
 AUTH_USER_MODEL="users.UserProfile"
 
@@ -142,3 +144,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS=[
     os.path.join(BASE_DIR,"static")
 ]
+
+EMAIL_HOST = "smtp.sina.com"  # SMTP服务器主机
+EMAIL_PORT = 25             # 端口
+EMAIL_HOST_USER = "goodgod2006@sina.com"       # 邮箱地址
+EMAIL_HOST_PASSWORD = "goodgod2006"    # 密码
+EMAIL_USE_TLS= True
+EMAIL_FROM = "goodgod2006@sina.com"        # 邮箱地址
