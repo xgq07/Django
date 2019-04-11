@@ -1,4 +1,4 @@
-from organization.views import OrgView,AddUserAskView,OrgHomeView,OrgCourseView,OrgDescView,OrgTeacherView
+from organization.views import OrgView,AddUserAskView,OrgHomeView,OrgCourseView,OrgDescView,OrgTeacherView,AddFavView
 from django.conf.urls import url,include
 #from django.urls import path,re_path
 
@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^course/(?P<org_id>\d+)/$', OrgCourseView.as_view(), name="org_course"),
     url(r'^desc/(?P<org_id>\d+)/', OrgDescView.as_view(), name="org_desc"),
     url(r'^teacher/(?P<org_id>\d+)/', OrgTeacherView.as_view(), name="org_teacher"),
+    url(r'^add_fav/$', AddFavView.as_view(), name="add_fav")
 ]
