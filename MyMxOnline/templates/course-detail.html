@@ -33,7 +33,7 @@
 						<h1 title="django 从入门到精通体验开始了">{{ course.name }}</h1>
 						<span class="key">{{ course.desc }}</span>
 						<div class="prize">
-							<span class="fl">难度：<i class="key">未填</i></span>
+							<span class="fl">难度：<i class="key">{{ course.get_degree_display }}</i></span>
 							<span class="fr">学习人数：{{ course.students }}</span>
 						</div>
 						<ul class="parameter">
@@ -41,16 +41,16 @@
                             <li><span class="pram word3">章&nbsp;节&nbsp;数：</span><span>{{ course.get_zj_nums }}</span></li>
                             <li><span class="pram word3">课程类别：</span><span title="">{{ course.category }}</span></li>
 							<li class="piclist"><span class="pram word4">学习用户：</span>
-                                
-                                    <span class="pic"><img width="40" height="40" src="../media/image/2016/12/default_big_14.png"/></span>
-                                
+                                {% for user_course in course.get_learn_users %}
+                                    <span class="pic"><img width="40" height="40" src="{{ MEDIA_URL }}{{ user_course.user.image }}"/></span>
+                                {% endfor %}
 							</li>
 						</ul>
 						<div class="btns">
 							<div class="btn colectgroupbtn"  id="jsLeftBtn">
                                   {% if has_fav_course %}已收藏{% else %}收藏{% endif %}
                             </div>
-                                <div class="buy btn"><a style="color: white" href="course-video.html">开始学习</a></div>
+                                <div class="buy btn"><a style="color: white" href="{% url 'course:course_info' course.id %}">开始学习</a></div>
 						</div>
 					</div>
                     <div class="group-share-box">
@@ -76,7 +76,7 @@
 					</div>
 					<div class="pic">
                         <a href="/company/14/">
-                            <img width="150" height="80" src="{{ MEDIA_URL }}{{ course.course_org.image }"/>
+                            <img width="150" height="80" src="{{ MEDIA_URL }}{{ course.course_org.image }}"/>
                         </a>
                     </div>
 					<a href="/company/14/">
@@ -131,7 +131,7 @@
 			<div class="right layout">
 				<div class="head">相关课程推荐</div>
                 <div class="group_recommend">
-                    {% for relate_course in relate_coures %}
+                    {% for relate_course in relate_courses %}
                         <dl>
                             <dt>
                                 <a target="_blank" href="">
@@ -152,8 +152,10 @@
 	</div>
 </section>
 {% endblock %}
+
+
 {% block custom_js %}
-<script type="text/javascript">
+    <script type="text/javascript">
 //收藏分享
 function add_fav(current_elem, fav_id, fav_type){
     $.ajax({
@@ -171,6 +173,7 @@ function add_fav(current_elem, fav_id, fav_type){
                     window.location.href="/login/";
                 }else{
                     alert(data.msg)
+                    current_elem.text("收藏")
                 }
 
             }else if(data.status == 'success'){
