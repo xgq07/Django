@@ -11,6 +11,7 @@ from django.http import HttpResponse
 from .forms import UserAskForm
 from operation.models import UserFavorite
 from django.contrib.auth import authenticate
+from django.db.models import Q
 
 class OrgView(View):
     '''课程机构'''
@@ -21,6 +22,13 @@ class OrgView(View):
 
         # 所有城市
         all_citys = CityDict.objects.all()
+
+        # 机构搜索功能
+        search_keywords = request.GET.get('keywords', '')
+        if search_keywords:
+            # 在name字段进行操作,做like语句的操作。i代表不区分大小写
+            # or操作使用Q
+            all_orgs = all_orgs.filter(Q(name__icontains=search_keywords) | Q(desc__icontains=search_keywords))
         # 城市筛选
         city_id = request.GET.get('city','')
         if city_id:
@@ -62,7 +70,6 @@ class OrgView(View):
             'hot_orgs':hot_orgs,
             'sort':sort,
         })
-
 
 class AddUserAskView(View):
     """
@@ -201,6 +208,12 @@ class TeacherListView(View):
         # 总共有多少老师使用count进行统计
         teacher_nums = all_teachers.count()
 
+        # 搜索功能
+        search_keywords = request.GET.get('keywords', '')
+        if search_keywords:
+            # 在name字段进行操作,做like语句的操作。i代表不区分大小写
+            # or操作使用Q
+            all_teachers = all_teachers.filter(name__icontains=search_keywords)
         # 人气排序
         sort = request.GET.get('sort','')
         if sort:

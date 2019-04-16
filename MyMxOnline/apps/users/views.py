@@ -7,10 +7,15 @@ from django.contrib.auth.backends import ModelBackend
 from .models import UserProfile,EmailVerifyRecord
 from django.db.models import Q
 from django.views.generic.base import View
-from .forms import LoginForm,RegisterForm,ForgetPwdForm,ModifyPwdForm
+from .forms import LoginForm,RegisterForm,ForgetPwdForm,ModifyPwdForm,UploadImageForm
 from django.contrib.auth.hashers import make_password
 from utils.email_send import send_register_eamil
-
+from django.contrib.auth.mixins  import  LoginRequiredMixin
+from django.http import HttpResponse,HttpResponseRedirect
+import json
+from django.core.urlresolvers import reverse
+from .models import Banner
+from courses.models import Course
 
 #邮箱和用户名都可以登录
 # 基础ModelBackend类，因为它有authenticate方法
@@ -51,7 +56,7 @@ class LoginView(View):
                 if user.is_active:
                     # 只有注册激活才能登录
                     login(request, user)
-                    return render(request, 'index.html')
+                    return HttpResponseRedirect(reverse('index'))
                 else:
                     return render(request, 'login.html', {'msg': '用户未激活', 'login_form': login_form})
             # 只有当用户名或密码不存在时，才返回错误信息到前端
@@ -157,3 +162,67 @@ class ModifyPwdView(View):
         else:
             email = request.POST.get("email", "")
             return render(request, "password_reset.html", {"email":email, "modify_form":modify_form })
+
+
+class UserinfoView(LoginRequiredMixin,View):
+    '''用户个人信息'''
+    def get(self,request):
+        return render(request,'usercenter-info.html',{})
+
+class UploadImageView(LoginRequiredMixin,View):
+    '''用户图像修改'''
+    def post(self,request):
+        #上传的文件都在request.FILES里面获取，所以这里要多传一个这个参数
+        # image_form = UploadImageForm(request.POST,request.FILES)
+        # if image_form.is_valid():
+        #     image = image_form.cleaned_data['image']
+        #     request.user.image = image
+        #     request.user.save()
+        #     return HttpResponse('{"status":"success"}', content_type='application/json')
+        # else:
+        #     return HttpResponse('{"status":"fail"}', content_type='application/json')
+        #另一方法
+        image_form = UploadImageForm(request.POST,request.FILES,instance=request.user)
+        if image_form.is_valid():
+            request.user.save()
+            return HttpResponse('{"status":"success"}', content_type='application/json')
+        else:
+            return HttpResponse('{"status":"fail"}', content_type='application/json')
+
+class UpdatePwdView(View):
+    """
+    个人中心修改用户密码
+    """
+    def post(self, request):
+        modify_form = ModifyPwdForm(request.POST)
+        if modify_form.is_valid():
+            pwd1 = request.POST.get("password1", "")
+            pwd2 = request.POST.get("password2", "")
+            if pwd1 != pwd2:
+                return HttpResponse('{"status":"fail","msg":"密码不一致"}',  content_type='application/json')
+            user = request.user
+            user.password = make_password(pwd2)
+            user.save()
+
+            return HttpResponse('{"status":"success"}', content_type='application/json')
+        else:
+            return HttpResponse(json.dumps(modify_form.errors), content_type='application/json')
+
+
+class IndexView(View):
+    '''首页'''
+    def get(self,request):
+        #轮播图
+        all_banners = Banner.objects.all().order_by('index')
+        #课程
+        courses = Course.objects.filter(is_banner=False)[:6]
+        #轮播课程
+        banner_courses = Course.objects.filter(is_banner=True)[:3]
+        #课程机构
+        course_orgs = Course.objects.all()[:15]
+        return render(request,'index.html',{
+            'all_banners':all_banners,
+            'courses':courses,
+            'banner_courses':banner_courses,
+            'course_orgs':course_orgs,
+        })

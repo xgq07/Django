@@ -32,6 +32,7 @@ class CourseOrg(models.Model):
     add_time = models.DateTimeField(default=datetime.now)
     students = models.IntegerField(default=0, verbose_name="学习人数")
     course_nums = models.IntegerField(default=0, verbose_name="课程数")
+    tag = models.CharField('机构标签',max_length=10,default='全国知名')
 
     class Meta:
         verbose_name = '课程机构'
