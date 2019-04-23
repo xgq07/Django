@@ -47,7 +47,7 @@ class Course(models.Model):
         return self.name
 
 class Lesson(models.Model):
-    course = models.ForeignKey(Course, verbose_name="课程")
+    course = models.ForeignKey(Course, verbose_name="课程",on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name="章节名")
     learn_times = models.IntegerField(default=0, verbose_name="学习时长(分钟数)")
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
@@ -65,7 +65,7 @@ class Lesson(models.Model):
 
 
 class Video(models.Model):
-    lesson = models.ForeignKey(Lesson, verbose_name="章节")
+    lesson = models.ForeignKey(Lesson, verbose_name="章节",on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name="视频名")
     learn_times = models.IntegerField(default=0, verbose_name="学习时长(分钟数)")
     url = models.CharField(max_length=200, default="", verbose_name="访问地址")
@@ -80,7 +80,7 @@ class Video(models.Model):
 
 
 class CourseResource(models.Model):
-    course = models.ForeignKey(Course, verbose_name="课程")
+    course = models.ForeignKey(Course, verbose_name="课程",on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name="名称")
     download = models.FileField(upload_to="course/resource/%Y/%m", verbose_name="资源文件", max_length=100)
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u"添加时间")
