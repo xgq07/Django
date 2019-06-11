@@ -16,7 +16,8 @@ from utils.mixin_utils import LoginRequiredMixin
 from .forms import UploadImageForm,UserInfoForm
 from operation.models import UserCourse,UserFavorite,UserMessage
 from organization.models import CourseOrg,Teacher
-from course.models import Course
+#from course.models import Course
+from courses.models import Course
 from .models import Banner
 from django.urls import reverse
 
