@@ -62,6 +62,7 @@ class LoginView(View):
     '''用户登录'''
 
     def get(self,request):
+        print('LoginView get')
         return render(request, 'login.html')
 
     def post(self,request):

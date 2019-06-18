@@ -1,0 +1,2 @@
+Python windows库装不上时
+www.lfd.uci.edu/~gohlke/pythonlibs/
