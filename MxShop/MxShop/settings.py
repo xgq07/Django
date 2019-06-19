@@ -28,7 +28,7 @@ SECRET_KEY = '*b%6gho(+2))b8a!y2yz(&_=@_1tz!&hat^3#8(&)&i=w1q)vm'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 #重载系统的用户，让UserProfile生效
 AUTH_USER_MODEL = 'users.UserProfile'
@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
+    'xadmin',
 ]
 
 MIDDLEWARE = [

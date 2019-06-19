@@ -37,6 +37,7 @@ class VerifyCode(models.Model):
     class Meta:
         verbose_name = "短信验证"
         verbose_name_plural = verbose_name
-
+        
     def __str__(self):
+        print ('')
         return self.code
